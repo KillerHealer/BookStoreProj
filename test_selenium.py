@@ -3,8 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import logging
 import time
-
-from pages_selenium.HomePage import HomePage
+from pages_selenium.home_page import HomePage
+from pages_selenium.login_page import LoginPage
 
 
 @pytest.fixture()
@@ -29,4 +29,6 @@ def test_login(home_page):
     :param home_page:
     :return:
     """
-
+    login_page = home_page.signIn()
+    home_page = login_page.login("noam@example.com", "string")
+    assert home_page.logOut()

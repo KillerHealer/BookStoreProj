@@ -1,7 +1,7 @@
 import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from BasicPage import BasicPage
+from basic_page import BasicPage
 
 
 class SearchResultPage(BasicPage):
