@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from basic_page import BasicPage
-from pages_selenium.home_page import HomePage
+from pages_selenium.basic_page import BasicPage
 
 
 class LoginPage(BasicPage):
@@ -17,4 +16,4 @@ class LoginPage(BasicPage):
         login_form.find_element(*self._locators["email_locate"]).send_keys(username)
         login_form.find_element(*self._locators["password_locate"]).send_keys(password)
         login_form.find_element(*self._locators["login_btn_locate"]).click()
-        return HomePage(*self._driver)
+        return self._driver

@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from basic_page import BasicPage
-from pages_selenium.login_page import LoginPage
+from pages_selenium.basic_page import BasicPage
 
 
 class HomePage(BasicPage):
@@ -14,11 +13,14 @@ class HomePage(BasicPage):
 
     def signIn(self):
         self._driver.find_element(*self._locators["Sign-In"]).click()
-        return LoginPage(*self._driver)
+        return self._driver
 
     def logOut(self):
         self._driver.find_element(*self._locators["logout"]).click()
         return self._driver
+
+    def loggedOut(self):
+        return len(self._driver.find_elements(*self._locators["logout"])) == 0
 
     def search(self, search_word):
         self._driver.find_element(*self._locators["search-box"]).send_keys(search_word)

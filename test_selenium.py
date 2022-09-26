@@ -18,7 +18,7 @@ def home_page():
     chrom_driver_path = "D:\pythonProject\chromedriver.exe"
     driver = webdriver.Chrome(chrom_driver_path, chrome_options=chrome_options)
     driver.maximize_window()
-    driver.get("http://automationpractice.com/index.php")
+    driver.get("http://localhost/store")
     home_page = HomePage(driver)
     return home_page
 
@@ -29,6 +29,11 @@ def test_login(home_page):
     :param home_page:
     :return:
     """
-    login_page = home_page.signIn()
-    home_page = login_page.login("noam@example.com", "string")
-    assert home_page.logOut()
+    time.sleep(1)
+    login_page = LoginPage(home_page.signIn())
+    home_page = HomePage(login_page.login("noam@example.com", "string"))
+    time.sleep(1)
+    home_page.logOut()
+    assert home_page.loggedOut()
+
+
