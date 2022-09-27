@@ -35,5 +35,20 @@ def test_login(home_page):
     time.sleep(1)
     home_page.logOut()
     assert home_page.loggedOut()
+    home_page.close()
 
+
+def test_buy(home_page):
+    """
+    logs in and tries to buy a book with the name provided
+     if the stock is 0 it buys Animal Farm
+    :param home_page:
+    :return:
+    """
+    time.sleep(1)
+    login_page = LoginPage(home_page.signIn())
+    home_page = HomePage(login_page.login("noam@example.com", "string"))
+    time.sleep(1)
+    assert home_page.buyBook(home_page.searchBook("The Hunger Games"))
+    home_page.close()
 

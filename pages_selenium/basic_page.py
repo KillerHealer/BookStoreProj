@@ -7,3 +7,6 @@ class BasicPage:
 
     def current_url(self):
         return self._driver.current_url
+
+    def close(self):
+        self._driver.close()
