@@ -11,12 +11,12 @@ class HomePage(BasicPage):
     def __init__(self, driver: webdriver):
         super().__init__(driver)
         self._locators = {"Sign-In": (By.XPATH, '//*[@id="root"]/nav/div/div/a[3]'),
-                          "search-box": (By.CLASS_NAME, "me-2 form-control"),
+                          "search-box": (By.ID, "searchtext"),
                           "logout": (By.XPATH, '//*[text() = "Log Out"]'),
                           "card-body": (By.CLASS_NAME, "card-body"),
                           "card-footer": (By.CLASS_NAME, "card-footer"),
                           "buy-book-btn": (By.CLASS_NAME, "card-footer"),
-                          "search-btn": (By.NAME, "")}
+                          "search-btn": (By.XPATH, '//*[@id="root"]/nav/div/form/button')}
 
     def signIn(self):
         self._driver.find_element(*self._locators["Sign-In"]).click()
@@ -31,6 +31,9 @@ class HomePage(BasicPage):
 
     def search(self, search_word):
         self._driver.find_element(*self._locators["search-box"]).send_keys(search_word)
+        time.sleep(1)
+        self._driver.find_element(*self._locators["search-btn"]).click()
+        time.sleep(1)
         self._driver.find_element(*self._locators["search-btn"]).click()
         return self._driver
 

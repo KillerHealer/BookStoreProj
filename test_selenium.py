@@ -5,6 +5,7 @@ import logging
 import time
 from pages_selenium.home_page import HomePage
 from pages_selenium.login_page import LoginPage
+from pages_selenium.search_page import SearchPage
 
 
 @pytest.fixture()
@@ -15,7 +16,7 @@ def home_page():
     """
     chrome_options = Options()
     chrome_options.add_experimental_option("detach", True)
-    chrom_driver_path = "D:\pythonProject\chromedriver.exe"
+    chrom_driver_path = "D:\Pyprojects\chromedriver.exe"
     driver = webdriver.Chrome(chrom_driver_path, chrome_options=chrome_options)
     driver.maximize_window()
     driver.get("http://localhost/store")
@@ -59,4 +60,6 @@ def test_search(home_page):
     :param home_page:
     :return:
     """
-
+    search_page = SearchPage(home_page.search("Catching"))
+    assert search_page.found("Catching Fire")
+    search_page.close()
