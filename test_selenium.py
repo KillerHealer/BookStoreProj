@@ -52,3 +52,11 @@ def test_buy(home_page):
     assert home_page.buyBook(home_page.searchBook("The Hunger Games"))
     home_page.close()
 
+
+def test_search(home_page):
+    """
+    Search the term in the search bar and check it was found
+    :param home_page:
+    :return:
+    """
+

@@ -11,8 +11,11 @@ class HomePage(BasicPage):
     def __init__(self, driver: webdriver):
         super().__init__(driver)
         self._locators = {"Sign-In": (By.XPATH, '//*[@id="root"]/nav/div/div/a[3]'),
-                          "search-box": (By.ID, ""),
+                          "search-box": (By.CLASS_NAME, "me-2 form-control"),
                           "logout": (By.XPATH, '//*[text() = "Log Out"]'),
+                          "card-body": (By.CLASS_NAME, "card-body"),
+                          "card-footer": (By.CLASS_NAME, "card-footer"),
+                          "buy-book-btn": (By.CLASS_NAME, "card-footer"),
                           "search-btn": (By.NAME, "")}
 
     def signIn(self):
@@ -39,7 +42,7 @@ class HomePage(BasicPage):
         """
         bookList = self._driver.find_elements(By.CLASS_NAME, "book-container")
         for card in bookList:
-            s = card.find_element(By.CLASS_NAME, "card-body").text
+            s = card.find_element(*self._locators["card-body"]).text
             if bookName in s:
                 if "Left In Stock: 0" in card.text:
                     break
@@ -52,10 +55,10 @@ class HomePage(BasicPage):
         :param book_card:
         :return:
         """
-        footer = book_card.find_element(By.CLASS_NAME, "card-footer")
+        footer = book_card.find_element(*self._locators["card-footer"])
         stock = [int(num) for num in re.findall(r"\d+", footer.text.split()[5])][0]
         title = book_card.text.partition('\n')[0]
-        footer.find_element(By.CLASS_NAME, "btn").click()
+        footer.find_element(*self._locators["buy-book-btn"]).click()
         actions = ActionChains(self._driver)
         actions.send_keys(Keys.ENTER)
         try:
