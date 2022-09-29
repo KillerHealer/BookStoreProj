@@ -6,7 +6,7 @@ import requests
 
 
 class AccountApi:
-    def __init__(self, url: str = "http://localhost:7017/api/Account"):
+    def __init__(self, url: str = "http://localhost:7017/swagger/index.html/api/Account/"):
         self._url = url
         self._headers = {'accept': 'application/json'}
         self._session = requests.session()
@@ -17,10 +17,7 @@ class AccountApi:
         res = self._session.post(url=f"{self._url}/register", data=account.__str__(), headers=self._headers)
         a1 = res.json()
         if res.status_code == 200:
-            my_acc = Account(**a1)
-            return my_acc
-        else:
-            return res.status_code
+           pass
 
     def post_login(self, email: str, password: str):
         account_data = {"email": email,
