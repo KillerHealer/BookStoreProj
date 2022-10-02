@@ -7,7 +7,7 @@ import requests
 class AccountApi:
     def __init__(self, url: str = "http://localhost:7017/api/Account/"):
         self._url = url
-        self._headers = {'accept': 'application/json'}
+        self._headers = {'accept': '*/*', 'content-Type': 'application/json'}
         self._session = requests.session()
         self._session.headers.update(self._headers)
 
@@ -21,21 +21,20 @@ class AccountApi:
     def post_login(self, email: str, password: str):
         account_data = {"email": email,
                         "password": password}
-        res = self._session.post(url=f"{self._url}/login", data=account_data, headers=self._headers)
+        account_data = json.dumps(account_data)
+        res = self._session.post(url=f"{self._url}login", data=account_data, headers=self._headers)
         a1 = res.json()
         if res.status_code == 200:
-            my_acc = AuthResponseDto(**a1)
-            return my_acc
+            my_auth = AuthResponseDto(**a1)
+            return my_auth
         else:
             return res.status_code
 
     def post_refreshToken(self, auth: AuthResponseDto):
-        account_data = {"email": email,
-                        "password": password}
-        res = self._session.post(url=f"{self._url}/refreshtoken", data=account_data, headers=self._headers)
+        res = self._session.post(url=f"{self._url}refreshtoken", data=auth.to_json(), headers=self._headers)
         a1 = res.json()
         if res.status_code == 200:
-            my_acc = AuthResponseDto(**a1)
-            return my_acc
+            my_auth = AuthResponseDto(**a1)
+            return my_auth
         else:
             return res.status_code
