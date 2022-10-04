@@ -7,3 +7,6 @@ class BasicPage:
 
     def current_url(self):
         return self._page.url
+
+    def close(self):
+        self._page.close()
