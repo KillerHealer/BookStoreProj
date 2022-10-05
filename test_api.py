@@ -1,6 +1,5 @@
 import pytest
 import logging
-import requests
 from API.account_api import AccountApi
 from Models.account import Account
 from Models.authResponseDto import AuthResponseDto
@@ -13,7 +12,7 @@ from Models.bookdto import BookDto
 
 my_account = Account(f"hhh{int(time.time())}@example.com", "123456", "noam", "barkai")
 my_author = Author(int(time.time()), f"noam", 10.00, 20.22, [])
-my_book = BookDto("ender", "good book i recommend", 50.0, 100, "", 5)
+my_book = BookDto(int(time.time()), "ender", "good book i recommend", 50.0, 100, "", 4)
 apiAC = AccountApi()
 apiAU = AuthorApi()
 apiB = BookApi()
@@ -84,6 +83,7 @@ def test_post_book():
     acc2 = apiAC.post_refreshToken(acc)
     book = apiB.post_book(my_book, acc2.token)
     assert isinstance(book, Book)
+    time.sleep(5)
     assert book.id == apiB.get_books_by_id(book.id).id
 
 
@@ -98,6 +98,52 @@ def test_put_book():
     book = apiB.post_book(my_book, acc2.token)
     book.name = "Ender new"
     book.price = 55
-    book = apiB.put_book(book, acc2.token)
-    assert isinstance(book, Book)
+    assert apiB.put_book(book, acc2.token)
     assert book.id == apiB.get_books_by_id(book.id).id
+
+
+@pytest.mark.book()
+def test_delete_book():
+    """
+    Log in, authorize with ADMIN token and tries to delete book and not find it by id
+    :return:
+    """
+    acc = apiAC.post_login("admin@sela.co.il", "ADMIN")
+    acc2 = apiAC.post_refreshToken(acc)
+    my_new_book = apiB.post_book(my_book, acc2.token)
+    assert apiB.delete_book(my_new_book.id, acc2.token)
+    alert_code = apiB.get_books_by_id(my_new_book.id)
+    assert alert_code == 404
+
+
+@pytest.mark.book()
+def test_find_book_by_authorid():
+    """
+    makes a new author, a new book and tries to find a book by its author's id
+    :return:
+    """
+    acc = apiAC.post_login("hhh1@example.com", "123456")
+    acc2 = apiAC.post_refreshToken(acc)
+    booli = False
+    author = apiAU.post_author(Author(5, f"noam", 10.00, 20.22, []), acc2.token)
+    my_book.authorId = author.id
+    book = apiB.post_book(my_book, acc2.token)
+    books = apiB.get_book_by_author(author.id)
+    for book_a in books:
+        if book_a.id == book.id:
+            booli = True
+    assert booli
+
+
+@pytest.mark.book()
+def test_purchase_book():
+    """
+    purchases a book and checks the stock before and after
+    :return:
+    """
+    acc = apiAC.post_login("hhh1@example.com", "123456")
+    acc2 = apiAC.post_refreshToken(acc)
+    stockB = apiB.get_books_by_id(1).amountInStock
+    book = apiB.purchase_book(1, acc2.token)
+    assert stockB - 1 == book.amountInStock
+

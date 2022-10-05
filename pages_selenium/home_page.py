@@ -15,7 +15,7 @@ class HomePage(BasicPage):
                           "logout": (By.XPATH, '//*[text() = "Log Out"]'),
                           "card-body": (By.CLASS_NAME, "card-body"),
                           "card-footer": (By.CLASS_NAME, "card-footer"),
-                          "buy-book-btn": (By.CLASS_NAME, "card-footer"),
+                          "buy-book-btn": (By.CLASS_NAME, "btn"),
                           "search-btn": (By.XPATH, '//*[@id="root"]/nav/div/form/button')}
 
     def signIn(self):
@@ -71,11 +71,9 @@ class HomePage(BasicPage):
         self._driver.refresh()
         time.sleep(1)
         book_card = self.searchBook(title)
-        stock2 = [int(num) for num in re.findall(r"\d+", book_card.find_element(By.CLASS_NAME, "card-footer").text.split()[5])][0]
+        stock2 = [int(num) for num in re.findall
+        (r"\d+", book_card.find_element(*self._locators["card-footer"]).text.split()[5])][0]
         if stock - 1 == stock2:
             return True
         else:
             return False
-
-
-

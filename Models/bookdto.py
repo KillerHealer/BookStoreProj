@@ -4,6 +4,7 @@ from Models.baseObj import baseObj
 
 @dataclass
 class BookDto(baseObj):
+    id: int
     name: str
     description: str
     price: float

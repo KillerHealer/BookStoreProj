@@ -9,13 +9,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 class HomePage(BasicPage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self._locators = {"Sign-In": (By.XPATH, '//*[@id="root"]/nav/div/div/a[3]'),
-                          "search-box": (By.ID, "searchtext"),
-                          "logout": (By.XPATH, '//*[text() = "Log Out"]'),
-                          "card-body": (By.CLASS_NAME, "card-body"),
-                          "card-footer": (By.CLASS_NAME, "card-footer"),
-                          "buy-book-btn": (By.CLASS_NAME, "card-footer"),
-                          "search-btn": (By.XPATH, '//*[@id="root"]/nav/div/form/button')}
+        self._locators = {"Sign-In": 'text=Log In',
+                          "search-box": "text=Books Or Authors",
+                          "logout": "text=Log Out",
+                          "book-container": 'xpath=//*[@id="root"]/div/div/div/div',
+                          "card-body": 'xpath=//*[@id="root"]/div/div/div/div[1]/div/div[1]',
+                          "card-footer": 'xpath=//*[@id="root"]/div/div/div/div[2]/div/div[2]',
+                          "buy-book-btn": "text=Purchase",
+                          "search-btn": "text=Search"}
 
     def signIn(self):
         self._page.locator(*self._locators["Sign-In"]).click()
@@ -42,11 +43,11 @@ class HomePage(BasicPage):
         :param bookName:
         :return:
         """
-        bookList = self._page.query_selector_all(By.CLASS_NAME, "book-container")
+        bookList = self._page.query_selector_all(self._locators["book-container"])
         for card in bookList:
-            s = card.query_selector(*self._locators["card-body"]).text
+            s = card.query_selector(*self._locators["card-body"]).inner_text()
             if bookName in s:
-                if "Left In Stock: 0" in card.text:
+                if "Left In Stock: 0" in card.inner_text:
                     break
                 return card
         return bookList[0]
@@ -70,12 +71,9 @@ class HomePage(BasicPage):
         self._page.reload()
         time.sleep(1)
         book_card = self.searchBook(title)
-        stock2 = [int(num) for num in re.findall(r"\d+",
-                                                 book_card.locator(By.CLASS_NAME, "card-footer").text.split()[5])][0]
+        stock2 = [int(num) for num in re.findall
+        (r"\d+", book_card.locator(*self._locators["card-footer"]).text.split()[5])][0]
         if stock - 1 == stock2:
             return True
         else:
             return False
-
-
-

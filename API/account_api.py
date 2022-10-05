@@ -11,14 +11,14 @@ class AccountApi:
         self._session = requests.session()
         self._session.headers.update(self._headers)
 
-    def post_register(self, account: Account):
+    def post_register(self, account: Account) -> bool or int:
         account_data = account.to_json()
         res = self._session.post(url=f"{self._url}register", data=account_data, headers=self._headers)
         if res.status_code == 200:
             return True
-        return False
+        return res.status_code
 
-    def post_login(self, email: str, password: str):
+    def post_login(self, email: str, password: str) -> AuthResponseDto or int:
         account_data = {"email": email,
                         "password": password}
         account_data = json.dumps(account_data)
@@ -30,8 +30,9 @@ class AccountApi:
         else:
             return res.status_code
 
-    def post_refreshToken(self, auth: AuthResponseDto):
-        res = self._session.post(url=f"{self._url}refreshtoken", data=auth.to_json(), headers=self._headers)
+    def post_refreshToken(self, auth: AuthResponseDto) -> AuthResponseDto or int:
+        auth_data = auth.to_json()
+        res = self._session.post(url=f"{self._url}refreshtoken", data=auth_data, headers=self._headers)
         a1 = res.json()
         if res.status_code == 200:
             my_auth = AuthResponseDto(**a1)

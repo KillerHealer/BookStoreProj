@@ -16,7 +16,7 @@ def home_page():
     """
     chrome_options = Options()
     chrome_options.add_experimental_option("detach", True)
-    chrom_driver_path = "D:\Pyprojects\chromedriver.exe"
+    chrom_driver_path = "D:\pythonProjects\chromedriver.exe"
     driver = webdriver.Chrome(chrom_driver_path, chrome_options=chrome_options)
     driver.maximize_window()
     driver.get("http://localhost/store")

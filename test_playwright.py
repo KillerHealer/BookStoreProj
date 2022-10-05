@@ -2,13 +2,13 @@ import logging
 import re
 import time
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page, sync_playwright
 from pages_playwright.home_page import HomePage
 from pages_playwright.login_page import LoginPage
 from pages_playwright.search_page import SearchPage
 
 
-@pytest.fixture()
+@pytest.fixture
 def home_page(page: Page):
     """
     gets page to login page
